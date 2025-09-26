@@ -5,24 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Karten-App</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html,body { height: 100%; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
       display: flex;
       height: 100vh;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       overflow: hidden;
       touch-action: pan-x; /* Nur horizontales Scrollen erlauben */
+      /* Übergang für sanfte Farbwechsel */
+      transition: background 650ms ease;
+      /* Fallback-Farbe falls Gradient nicht gezeichnet wird */
+      background: linear-gradient(135deg, hsl(240 60% 60%) 0%, hsl(280 60% 45%) 100%);
     }
-    
+
     .card-container {
       width: 100%;
       height: 100%;
@@ -30,8 +28,9 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      padding: 24px;
     }
-    
+
     .card {
       width: 90%;
       max-width: 600px;
@@ -48,14 +47,7 @@
       justify-content: center;
       line-height: 1.4;
     }
-    
-    .id {
-      font-weight: bold;
-      color: #888;
-      margin-bottom: 20px;
-      font-size: 0.7em;
-    }
-    
+
     /* Unsichtbare Bereiche für Touch an den Rändern */
     .edge-touch {
       position: absolute;
@@ -64,14 +56,8 @@
       width: 20%;
       z-index: 10;
     }
-    
-    .left-edge {
-      left: 0;
-    }
-    
-    .right-edge {
-      right: 0;
-    }
+    .left-edge { left: 0; }
+    .right-edge { right: 0; }
   </style>
 </head>
 <body>
@@ -79,7 +65,7 @@
     <!-- Unsichtbare Touch-Bereiche an den Rändern -->
     <div class="edge-touch left-edge" id="leftEdge"></div>
     <div class="edge-touch right-edge" id="rightEdge"></div>
-    
+
     <div class="card" id="card">
       Lade Fragen…
     </div>
@@ -89,12 +75,19 @@
     let questions = [];
     let currentIndex = 0;
 
+    // Farb-Logik: startHue zufällig, delta = wie stark sich die Farbe pro Wechsel ändert
+    let hue = Math.floor(Math.random() * 360);
+    const HUE_DELTA = 14; // Grad pro Wechsel (kleiner = subtiler)
+    const SAT1 = 60, LIG1 = 60;   // erster Farbpunkt
+    const SAT2 = 60, LIG2 = 45;   // zweiter Farbpunkt
+
     async function loadCSV() {
       try {
         const res = await fetch('cards.csv');
         const text = await res.text();
         parseCSV(text);
         shuffleQuestions();
+        currentIndex = 0;
         showCard();
       } catch (err) {
         document.getElementById('card').innerText = "Fehler beim Laden der CSV.";
@@ -103,10 +96,20 @@
     }
 
     function parseCSV(text) {
-      const lines = text.trim().split("\n");
-      questions = lines.slice(1).map(line => {
-        const [id, ...rest] = line.split(",");
-        return { id, question: rest.join(",") };
+      // robustere Trennung: Zeilen, ggf. \r\n, und Entfernen leerer Zeilen
+      const lines = text.split(/\r\n|\n|\r/).filter(l => l.trim() !== '');
+      // Falls Kopfzeile vorhanden: erkenne "id" oder "frage"/"question"
+      let start = 0;
+      if (lines.length && /(^|\s|,)(id|frage|question)(\s|,|$)/i.test(lines[0])) start = 1;
+      questions = lines.slice(start).map(line => {
+        // einfacher CSV-Split: trennt nur am ersten Komma, Rest bleibt Frage (falls Kommas in Text vorhanden)
+        const idx = line.indexOf(',');
+        if (idx === -1) return { id: '', question: line.trim() };
+        const id = line.slice(0, idx).trim();
+        const question = line.slice(idx + 1).trim();
+        // Entferne mögliche umschließende Anführungszeichen
+        const q = question.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
+        return { id, question: q };
       });
     }
 
@@ -117,11 +120,23 @@
       }
     }
 
+    function changeBackground() {
+      // hue wird erhöht, dann als Gradient gesetzt
+      hue = (hue + HUE_DELTA) % 360;
+      const h1 = hue;
+      const h2 = (hue + 40) % 360;
+      // Verwende CSS HSL-Syntax (neue Syntax ohne Kommas)
+      document.body.style.background = `linear-gradient(135deg, hsl(${h1} ${SAT1}% ${LIG1}%) 0%, hsl(${h2} ${SAT2}% ${LIG2}%) 100%)`;
+    }
+
     function showCard() {
       if (questions.length === 0) return;
       const q = questions[currentIndex];
-      document.getElementById('card').innerHTML =
-        `<div class="id">${q.id}</div>${q.question}`;
+      // Frage anzeigen (benutze innerHTML nicht nötig hier, setze TextContent)
+      const cardEl = document.getElementById('card');
+      cardEl.textContent = q.question;
+      // Hintergrund leicht ändern
+      changeBackground();
     }
 
     // Swipe-Funktionalität
@@ -134,39 +149,31 @@
     }, { passive: true });
 
     document.addEventListener("touchmove", e => {
-      if (!startX || !startY) return;
-      
+      if (startX === null || startY === null) return;
       const currentX = e.touches[0].clientX;
       const currentY = e.touches[0].clientY;
-      
-      // Nur horizontale Bewegungen zulassen, vertikale unterdrücken
       const diffX = Math.abs(currentX - startX);
       const diffY = Math.abs(currentY - startY);
-      
-      // Wenn die Bewegung hauptsächlich vertikal ist, unterdrücken
+      // Wenn die Bewegung hauptsächlich vertikal ist, unterdrücken (keine horizontale Navigation)
       if (diffY > diffX) {
         e.preventDefault();
       }
     }, { passive: false });
 
     document.addEventListener("touchend", e => {
-      if (!startX) return;
-      
+      if (startX === null) return;
       const endX = e.changedTouches[0].clientX;
       const diffX = endX - startX;
-      
-      // Swipe-Erkennung (nur horizontal)
       if (Math.abs(diffX) > 50) {
         if (diffX > 0) {
-          // Nach rechts geswiped -> vorherige Frage
+          // nach rechts -> vorherige
           currentIndex = (currentIndex - 1 + questions.length) % questions.length;
         } else {
-          // Nach links geswiped -> nächste Frage
+          // nach links -> nächste
           currentIndex = (currentIndex + 1) % questions.length;
         }
         showCard();
       }
-      
       startX = null;
       startY = null;
     }, { passive: true });
@@ -176,7 +183,6 @@
       currentIndex = (currentIndex - 1 + questions.length) % questions.length;
       showCard();
     });
-
     document.getElementById('rightEdge').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % questions.length;
       showCard();
@@ -194,29 +200,19 @@
     });
 
     // Scrollen komplett verhindern
-    document.addEventListener('scroll', (e) => {
-      window.scrollTo(0, 0);
-    });
+    document.addEventListener('scroll', () => { window.scrollTo(0, 0); });
 
     window.addEventListener('load', () => {
       window.scrollTo(0, 0);
     });
 
-    // Verhindern, dass die Seite zoomt
-    document.addEventListener('gesturestart', (e) => {
-      e.preventDefault();
+    // Verhindern, dass die Seite zoomt (iOS Gesten)
+    ['gesturestart','gesturechange','gestureend'].forEach(ev => {
+      document.addEventListener(ev, (e) => e.preventDefault());
     });
 
-    document.addEventListener('gesturechange', (e) => {
-      e.preventDefault();
-    });
-
-    document.addEventListener('gestureend', (e) => {
-      e.preventDefault();
-    });
-
+    // Initial laden
     loadCSV();
   </script>
 </body>
 </html>
-
