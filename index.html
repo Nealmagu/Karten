@@ -2,50 +2,99 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Karten-App</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       display: flex;
       height: 100vh;
       align-items: center;
       justify-content: center;
-      background: #f0f0f0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+      touch-action: pan-x; /* Nur horizontales Scrollen erlauben */
     }
+    
+    .card-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
     .card {
-      width: 80%;
-      max-width: 500px;
-      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      min-height: 300px;
+      padding: 40px;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       text-align: center;
-      font-size: 1.2em;
+      font-size: 1.8em;
       user-select: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.4;
     }
+    
     .id {
       font-weight: bold;
-      color: #666;
-      margin-bottom: 10px;
+      color: #888;
+      margin-bottom: 20px;
+      font-size: 0.7em;
+    }
+    
+    /* Unsichtbare Bereiche für Touch an den Rändern */
+    .edge-touch {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 20%;
+      z-index: 10;
+    }
+    
+    .left-edge {
+      left: 0;
+    }
+    
+    .right-edge {
+      right: 0;
     }
   </style>
 </head>
 <body>
-  <div class="card" id="card">
-    Lade Fragen…
+  <div class="card-container">
+    <!-- Unsichtbare Touch-Bereiche an den Rändern -->
+    <div class="edge-touch left-edge" id="leftEdge"></div>
+    <div class="edge-touch right-edge" id="rightEdge"></div>
+    
+    <div class="card" id="card">
+      Lade Fragen…
+    </div>
   </div>
 
   <script>
     let questions = [];
     let currentIndex = 0;
-    let startX = null;
 
     async function loadCSV() {
       try {
         const res = await fetch('cards.csv');
         const text = await res.text();
         parseCSV(text);
+        shuffleQuestions();
         showCard();
       } catch (err) {
         document.getElementById('card').innerText = "Fehler beim Laden der CSV.";
@@ -61,6 +110,13 @@
       });
     }
 
+    function shuffleQuestions() {
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+      }
+    }
+
     function showCard() {
       if (questions.length === 0) return;
       const q = questions[currentIndex];
@@ -68,27 +124,99 @@
         `<div class="id">${q.id}</div>${q.question}`;
     }
 
-    // Swipe Steuerung
+    // Swipe-Funktionalität
+    let startX = null;
+    let startY = null;
+
     document.addEventListener("touchstart", e => {
       startX = e.touches[0].clientX;
-    });
+      startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener("touchmove", e => {
+      if (!startX || !startY) return;
+      
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      
+      // Nur horizontale Bewegungen zulassen, vertikale unterdrücken
+      const diffX = Math.abs(currentX - startX);
+      const diffY = Math.abs(currentY - startY);
+      
+      // Wenn die Bewegung hauptsächlich vertikal ist, unterdrücken
+      if (diffY > diffX) {
+        e.preventDefault();
+      }
+    }, { passive: false });
 
     document.addEventListener("touchend", e => {
-      if (startX === null) return;
-      let diff = e.changedTouches[0].clientX - startX;
-      if (diff > 50) {
-        // links zurück
+      if (!startX) return;
+      
+      const endX = e.changedTouches[0].clientX;
+      const diffX = endX - startX;
+      
+      // Swipe-Erkennung (nur horizontal)
+      if (Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+          // Nach rechts geswiped -> vorherige Frage
+          currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+        } else {
+          // Nach links geswiped -> nächste Frage
+          currentIndex = (currentIndex + 1) % questions.length;
+        }
+        showCard();
+      }
+      
+      startX = null;
+      startY = null;
+    }, { passive: true });
+
+    // Touch an den Bildrändern für vorherige/nächste Frage
+    document.getElementById('leftEdge').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+      showCard();
+    });
+
+    document.getElementById('rightEdge').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % questions.length;
+      showCard();
+    });
+
+    // Tastaturunterstützung
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
         currentIndex = (currentIndex - 1 + questions.length) % questions.length;
         showCard();
-      } else if (diff < -50) {
-        // rechts vor
+      } else if (e.key === 'ArrowRight') {
         currentIndex = (currentIndex + 1) % questions.length;
         showCard();
       }
-      startX = null;
+    });
+
+    // Scrollen komplett verhindern
+    document.addEventListener('scroll', (e) => {
+      window.scrollTo(0, 0);
+    });
+
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+    });
+
+    // Verhindern, dass die Seite zoomt
+    document.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+    });
+
+    document.addEventListener('gesturechange', (e) => {
+      e.preventDefault();
+    });
+
+    document.addEventListener('gestureend', (e) => {
+      e.preventDefault();
     });
 
     loadCSV();
   </script>
 </body>
 </html>
+
