@@ -14,21 +14,53 @@
       transition: background 650ms ease;
       background: linear-gradient(135deg, hsl(240 60% 60%) 0%, hsl(280 60% 45%) 100%);
     }
-    .card-container{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;padding:24px}
+
+    .card-container{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;padding:20px;
+    }
+
     .card{
-      width:90%;max-width:660px;min-height:320px;padding:32px;background:white;border-radius:20px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.18);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+      width:92%;max-width:700px;min-height:320px;padding:28px 36px;background:white;border-radius:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.16);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
     }
+
+    /* Überschrift (ID): jetzt dezenter */
     .card-id{
-      font-weight:800;color:#111;font-size:clamp(2rem,5vw,3rem);margin-bottom:18px;text-align:center;line-height:1;letter-spacing:0.02em;
+      font-weight:700;
+      color:#111;
+      /* etwas kleiner als vorher, aber immer noch hervorgehoben */
+      font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+      margin-bottom:14px;
+      text-align:center;
+      line-height:1;
+      letter-spacing:0.02em;
     }
+
+    /* Frage: größer, weniger Unterschied zur ID */
     .card-question{
-      font-weight:400;font-size:clamp(1rem,2.6vw,1.6rem);color:#111;white-space:pre-wrap;word-break:break-word;text-align:center;max-width:100%;
+      font-weight:400;
+      color:#111;
+      font-size: clamp(1.25rem, 2.8vw, 1.8rem);
+      line-height:1.45;
+      white-space:pre-wrap;
+      word-break:break-word;
+      text-align:center;
+      max-width:100%;
     }
+
     .edge-touch{position:absolute;top:0;height:100%;width:20%;z-index:10}
     .left-edge{left:0} .right-edge{right:0}
-    .status{position:absolute;left:12px;bottom:12px;font-size:13px;color:rgba(0,0,0,0.6);background:rgba(255,255,255,0.75);padding:6px 8px;border-radius:8px;backdrop-filter:blur(4px)}
-    @media(max-width:360px){ .card{padding:20px;border-radius:14px} .card-id{font-size:1.7rem;margin-bottom:14px} }
+
+    .status{
+      position:absolute;left:12px;bottom:12px;font-size:13px;color:rgba(0,0,0,0.6);
+      background:rgba(255,255,255,0.78);padding:6px 8px;border-radius:8px;backdrop-filter:blur(4px);
+    }
+
+    @media(max-width:360px){
+      .card{padding:18px;border-radius:14px}
+      .card-id{font-size:1.5rem;margin-bottom:12px}
+      .card-question{font-size:1.15rem}
+    }
   </style>
 </head>
 <body>
@@ -37,6 +69,7 @@
     <div class="edge-touch right-edge" id="rightEdge" aria-hidden="true"></div>
 
     <div class="card" id="card">Lade Fragen…</div>
+
     <div class="status" id="status">Status: initialisiere…</div>
   </div>
 
@@ -70,17 +103,16 @@ function hasUnquotedSemicolon(text){
   for(let i=0;i<text.length;i++){
     const ch = text[i], next = text[i+1];
     if(ch === '"'){
-      if(inQuotes && next === '"'){ i++; continue; } // escaped quote
+      if(inQuotes && next === '"'){ i++; continue; }
       inQuotes = !inQuotes;
       continue;
     }
     if(!inQuotes && ch === ';') return true;
-    // ignore other chars
   }
   return false;
 }
 
-// choose delimiter: prefer semicolon if any unquoted semicolons exist
+// choose delimiter: prefer semicolon if present unquoted
 function chooseDelimiter(text){
   if(hasUnquotedSemicolon(text)) return ';';
   return ','; // fallback
@@ -95,7 +127,6 @@ function cleanField(s){
   if((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))){
     t = t.slice(1,-1);
   }
-  // remove semicolons at start/end leftover
   t = t.replace(/^\s*;+\s*/,'').replace(/\s*;+\s*$/,'');
   return t.trim();
 }
@@ -145,35 +176,24 @@ async function loadCSV(){
     const parsed = [];
     for(let i=start;i<rows.length;i++){
       const r = rows[i];
-      // If delimiter was semicolon, id should be r[0], question r[1] (and r[1] may contain commas safely)
-      // If delimiter was comma and question contains commas in quotes, parser already handled it.
       const rawId = r[0] ?? '';
-      // If row has only 1 column (unlikely), treat everything after first semicolon fallback: attempt manual split on first unquoted semicolon
       let rawQuestion = '';
       if(r.length >= 2) {
         rawQuestion = r[1];
-        if(r.length > 2) {
-          // if there are extra columns (unlikely for semicolon format), join them with comma (they are part of question)
-          rawQuestion = [r.slice(1).join(',')].join(',');
-        }
+        if(r.length > 2) rawQuestion = [r.slice(1).join(',')].join(',');
       } else {
-        // fallback: find first unquoted semicolon in original line and split there
-        const origLine = text.split(/\r\n|\n|\r/)[i]; // approximate
-        if(origLine) {
+        // fallback: try to split by first unquoted semicolon in original line
+        const origLine = text.split(/\r\n|\n|\r/)[i];
+        if(origLine){
           let inQ=false, idx=-1;
           for(let k=0;k<origLine.length;k++){
             const ch = origLine[k], nxt = origLine[k+1];
             if(ch === '"'){ if(inQ && nxt === '"'){ k++; continue;} inQ = !inQ; continue; }
             if(!inQ && ch === ';'){ idx = k; break; }
           }
-          if(idx >= 0) {
-            rawQuestion = origLine.slice(idx+1);
-          } else {
-            rawQuestion = r[0]; // give something
-          }
-        } else {
-          rawQuestion = '';
-        }
+          if(idx >= 0) rawQuestion = origLine.slice(idx+1);
+          else rawQuestion = r[0];
+        } else rawQuestion = '';
       }
       const id = cleanField(rawId) || String(i - start + 1);
       const question = cleanField(rawQuestion || '');
@@ -196,17 +216,17 @@ async function loadCSV(){
   }
 }
 
-function shuffleQuestions(){ for(let i=questions.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; } }
+function shuffleQuestions(){ for(let i=questions.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [questions[i],questions[j]]=[questions[j],questions[i]]; } }
 
 /* ---------- Navigation ---------- */
 let startX = null, startY = null;
-document.addEventListener('touchstart', e => { if(e.touches&&e.touches[0]){ startX=e.touches[0].clientX; startY=e.touches[0].clientY; } }, {passive:true});
-document.addEventListener('touchmove', e => { if(startX===null) return; const cx = e.touches[0].clientX, cy = e.touches[0].clientY; const dx=Math.abs(cx-startX), dy=Math.abs(cy-startY); if(dy>dx) e.preventDefault(); }, {passive:false});
+document.addEventListener('touchstart', e => { if(e.touches && e.touches[0]){ startX = e.touches[0].clientX; startY = e.touches[0].clientY; } }, {passive:true});
+document.addEventListener('touchmove', e => { if(startX===null) return; const cx = e.touches[0].clientX, cy = e.touches[0].clientY; const dx = Math.abs(cx-startX), dy = Math.abs(cy-startY); if(dy>dx) e.preventDefault(); }, {passive:false});
 document.addEventListener('touchend', e => { if(startX===null) return; const endX = e.changedTouches[0].clientX, diff = endX - startX; if(Math.abs(diff) > 50 && questions.length){ currentIndex = (currentIndex + (diff>0?-1:1) + questions.length) % questions.length; showCard(); } startX=null; startY=null; }, {passive:true});
 
 document.getElementById('leftEdge').addEventListener('click', () => { if(!questions.length) return; currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); });
 document.getElementById('rightEdge').addEventListener('click', () => { if(!questions.length) return; currentIndex = (currentIndex + 1) % questions.length; showCard(); });
-document.addEventListener('keydown', e => { if(!questions.length) return; if(e.key === 'ArrowLeft'){ currentIndex=(currentIndex-1+questions.length)%questions.length; showCard(); } if(e.key==='ArrowRight'){ currentIndex=(currentIndex+1)%questions.length; showCard(); } });
+document.addEventListener('keydown', e => { if(!questions.length) return; if(e.key === 'ArrowLeft'){ currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); } if(e.key === 'ArrowRight'){ currentIndex = (currentIndex + 1) % questions.length; showCard(); } });
 
 ['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 
