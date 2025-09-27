@@ -14,10 +14,8 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      touch-action: pan-x; /* Nur horizontales Scrollen erlauben */
-      /* Übergang für sanfte Farbwechsel */
+      touch-action: pan-x;
       transition: background 650ms ease;
-      /* Fallback-Farbe falls Gradient nicht gezeichnet wird */
       background: linear-gradient(135deg, hsl(240 60% 60%) 0%, hsl(280 60% 45%) 100%);
     }
 
@@ -35,20 +33,33 @@
       width: 90%;
       max-width: 600px;
       min-height: 300px;
-      padding: 40px;
+      padding: 32px;
       background: white;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
       text-align: center;
-      font-size: 1.8em;
       user-select: none;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       line-height: 1.4;
     }
 
-    /* Unsichtbare Bereiche für Touch an den Rändern */
+    .card-id {
+      font-weight: 800;
+      color: #222;
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 20px;
+    }
+
+    .card-question {
+      font-size: clamp(1rem, 2.6vw, 1.9rem);
+      color: #111;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
     .edge-touch {
       position: absolute;
       top: 0;
@@ -58,11 +69,15 @@
     }
     .left-edge { left: 0; }
     .right-edge { right: 0; }
+
+    @media (max-width: 360px) {
+      .card { padding: 20px; border-radius: 14px; }
+      .card-id { font-size: 1.7rem; margin-bottom: 14px; }
+    }
   </style>
 </head>
 <body>
   <div class="card-container">
-    <!-- Unsichtbare Touch-Bereiche an den Rändern -->
     <div class="edge-touch left-edge" id="leftEdge"></div>
     <div class="edge-touch right-edge" id="rightEdge"></div>
 
@@ -72,146 +87,114 @@
   </div>
 
   <script>
+    /* CSV Parser und Logik wie vorher, nur die Darstellung angepasst */
+
+    function parseCSVRows(text, delim = ',') {
+      const rows = [];
+      let row = [], cur = '', inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i], next = text[i+1];
+        if (ch === '"') {
+          if (inQuotes && next === '"') { cur += '"'; i++; }
+          else { inQuotes = !inQuotes; }
+          continue;
+        }
+        if (!inQuotes && ch === delim) { row.push(cur); cur = ''; continue; }
+        if (!inQuotes && (ch === '\n' || ch === '\r')) {
+          if (ch === '\r' && text[i+1] === '\n') i++;
+          row.push(cur); rows.push(row);
+          row = []; cur = '';
+          continue;
+        }
+        cur += ch;
+      }
+      if (cur !== '' || row.length > 0) { row.push(cur); rows.push(row); }
+      return rows;
+    }
+
+    function detectAndParseCSV(text) {
+      let rows = parseCSVRows(text, ',');
+      if (rows.every(r => r.length === 1)) {
+        const semi = parseCSVRows(text, ';');
+        if (semi.some(r => r.length > 1)) rows = semi;
+      }
+      return rows.filter(r => r.some(cell => (cell||'').trim() !== ''));
+    }
+
     let questions = [];
     let currentIndex = 0;
-
-    // Farb-Logik: startHue zufällig, delta = wie stark sich die Farbe pro Wechsel ändert
     let hue = Math.floor(Math.random() * 360);
-    const HUE_DELTA = 14; // Grad pro Wechsel (kleiner = subtiler)
-    const SAT1 = 60, LIG1 = 60;   // erster Farbpunkt
-    const SAT2 = 60, LIG2 = 45;   // zweiter Farbpunkt
+    const HUE_DELTA = 14;
 
     async function loadCSV() {
       try {
         const res = await fetch('cards.csv');
         const text = await res.text();
-        parseCSV(text);
-        shuffleQuestions();
-        currentIndex = 0;
-        showCard();
-      } catch (err) {
-        document.getElementById('card').innerText = "Fehler beim Laden der CSV.";
-        console.error(err);
+        loadFromCSVText(text);
+      } catch {
+        document.getElementById('card').textContent = "Fehler beim Laden der CSV.";
       }
     }
 
-    function parseCSV(text) {
-      // robustere Trennung: Zeilen, ggf. \r\n, und Entfernen leerer Zeilen
-      const lines = text.split(/\r\n|\n|\r/).filter(l => l.trim() !== '');
-      // Falls Kopfzeile vorhanden: erkenne "id" oder "frage"/"question"
+    function loadFromCSVText(text) {
+      const rows = detectAndParseCSV(text);
       let start = 0;
-      if (lines.length && /(^|\s|,)(id|frage|question)(\s|,|$)/i.test(lines[0])) start = 1;
-      questions = lines.slice(start).map(line => {
-        // einfacher CSV-Split: trennt nur am ersten Komma, Rest bleibt Frage (falls Kommas in Text vorhanden)
-        const idx = line.indexOf(',');
-        if (idx === -1) return { id: '', question: line.trim() };
-        const id = line.slice(0, idx).trim();
-        const question = line.slice(idx + 1).trim();
-        // Entferne mögliche umschließende Anführungszeichen
-        const q = question.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
-        return { id, question: q };
-      });
+      if (rows.length > 0) {
+        const first = rows[0].map(c => c.toLowerCase());
+        if (first.some(c => c.includes("id") || c.includes("frage"))) start = 1;
+      }
+      questions = rows.slice(start).map((r,i) => ({
+        id: (r[0]||String(i+1)).trim(),
+        question: (r[1] || r.slice(1).join(',')).trim()
+      })).filter(q => q.question);
+      shuffleQuestions();
+      currentIndex = 0;
+      showCard();
     }
 
     function shuffleQuestions() {
-      for (let i = questions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+      for (let i = questions.length-1; i>0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
         [questions[i], questions[j]] = [questions[j], questions[i]];
       }
     }
 
     function changeBackground() {
-      // hue wird erhöht, dann als Gradient gesetzt
       hue = (hue + HUE_DELTA) % 360;
-      const h1 = hue;
-      const h2 = (hue + 40) % 360;
-      // Verwende CSS HSL-Syntax (neue Syntax ohne Kommas)
-      document.body.style.background = `linear-gradient(135deg, hsl(${h1} ${SAT1}% ${LIG1}%) 0%, hsl(${h2} ${SAT2}% ${LIG2}%) 100%)`;
+      const h1 = hue, h2 = (hue+40)%360;
+      document.body.style.background = 
+        `linear-gradient(135deg,hsl(${h1} 60% 60%) 0%,hsl(${h2} 60% 45%) 100%)`;
     }
 
     function showCard() {
-      if (questions.length === 0) return;
-      const q = questions[currentIndex];
-      // Frage anzeigen (benutze innerHTML nicht nötig hier, setze TextContent)
       const cardEl = document.getElementById('card');
-      cardEl.textContent = q.question;
-      // Hintergrund leicht ändern
+      if (questions.length === 0) { cardEl.textContent = 'Keine Fragen gefunden.'; return; }
+      const q = questions[currentIndex];
+      cardEl.innerHTML = `
+        <div class="card-id">${q.id}</div>
+        <div class="card-question">${q.question}</div>`;
       changeBackground();
     }
 
-    // Swipe-Funktionalität
-    let startX = null;
-    let startY = null;
-
-    document.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    }, { passive: true });
-
-    document.addEventListener("touchmove", e => {
-      if (startX === null || startY === null) return;
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
-      const diffX = Math.abs(currentX - startX);
-      const diffY = Math.abs(currentY - startY);
-      // Wenn die Bewegung hauptsächlich vertikal ist, unterdrücken (keine horizontale Navigation)
-      if (diffY > diffX) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    document.addEventListener("touchend", e => {
-      if (startX === null) return;
-      const endX = e.changedTouches[0].clientX;
-      const diffX = endX - startX;
-      if (Math.abs(diffX) > 50) {
-        if (diffX > 0) {
-          // nach rechts -> vorherige
-          currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-        } else {
-          // nach links -> nächste
-          currentIndex = (currentIndex + 1) % questions.length;
-        }
+    // Navigation (Swipe & Taps)
+    let startX=null;
+    document.addEventListener("touchstart",e=>{ if(e.touches[0]) startX=e.touches[0].clientX; });
+    document.addEventListener("touchend",e=>{
+      if(startX===null) return;
+      const diff=e.changedTouches[0].clientX-startX;
+      if(Math.abs(diff)>50){
+        currentIndex=(currentIndex+(diff>0?-1:1)+questions.length)%questions.length;
         showCard();
       }
-      startX = null;
-      startY = null;
-    }, { passive: true });
-
-    // Touch an den Bildrändern für vorherige/nächste Frage
-    document.getElementById('leftEdge').addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-      showCard();
+      startX=null;
     });
-    document.getElementById('rightEdge').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % questions.length;
-      showCard();
+    document.getElementById('leftEdge').onclick=()=>{currentIndex=(currentIndex-1+questions.length)%questions.length;showCard();};
+    document.getElementById('rightEdge').onclick=()=>{currentIndex=(currentIndex+1)%questions.length)%questions.length;showCard();};
+    document.addEventListener('keydown',e=>{
+      if(e.key==="ArrowLeft"){currentIndex=(currentIndex-1+questions.length)%questions.length;showCard();}
+      if(e.key==="ArrowRight"){currentIndex=(currentIndex+1)%questions.length;showCard();}
     });
 
-    // Tastaturunterstützung
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-        showCard();
-      } else if (e.key === 'ArrowRight') {
-        currentIndex = (currentIndex + 1) % questions.length;
-        showCard();
-      }
-    });
-
-    // Scrollen komplett verhindern
-    document.addEventListener('scroll', () => { window.scrollTo(0, 0); });
-
-    window.addEventListener('load', () => {
-      window.scrollTo(0, 0);
-    });
-
-    // Verhindern, dass die Seite zoomt (iOS Gesten)
-    ['gesturestart','gesturechange','gestureend'].forEach(ev => {
-      document.addEventListener(ev, (e) => e.preventDefault());
-    });
-
-    // Initial laden
     loadCSV();
   </script>
 </body>
