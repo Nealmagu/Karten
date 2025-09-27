@@ -19,13 +19,31 @@
       width:90%;max-width:660px;min-height:320px;padding:32px;background:white;border-radius:20px;
       box-shadow:0 10px 30px rgba(0,0,0,0.18);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
     }
-    .card-id{font-weight:800;color:#222;font-size:clamp(2rem,5vw,3rem);margin-bottom:18px}
-    .card-question{font-size:clamp(1rem,2.6vw,1.9rem);color:#111;white-space:pre-wrap;word-break:break-word;text-align:center}
+    /* ID = große zentrale Überschrift */
+    .card-id{
+      font-weight:800;
+      color:#111;
+      font-size:clamp(2rem,5vw,3rem);
+      margin-bottom:18px;
+      text-align:center;
+      line-height:1;
+      letter-spacing:0.02em;
+    }
+    /* Frage = normaler Schriftschnitt, nicht fett */
+    .card-question{
+      font-weight:400;
+      font-size:clamp(1rem,2.6vw,1.6rem);
+      color:#111;
+      white-space:pre-wrap;
+      word-break:break-word;
+      text-align:center;
+      max-width:100%;
+    }
     .edge-touch{position:absolute;top:0;height:100%;width:20%;z-index:10}
     .left-edge{left:0} .right-edge{right:0}
     .status{
       position: absolute; left: 12px; bottom: 12px; font-size: 13px; color: rgba(0,0,0,0.6);
-      background: rgba(255,255,255,0.7); padding:6px 8px; border-radius:8px;
+      background: rgba(255,255,255,0.75); padding:6px 8px; border-radius:8px;
       backdrop-filter: blur(4px);
     }
     @media(max-width:360px){ .card{padding:20px;border-radius:14px} .card-id{font-size:1.7rem;margin-bottom:14px} }
@@ -40,14 +58,14 @@
       Lade Fragen…
     </div>
 
-    <div class="status" id="status">Status: Initialisiere…</div>
+    <div class="status" id="status">Status: initialisiere…</div>
   </div>
 
 <script>
-/* ---------- Robuster CSV-Parser ---------- */
+/* ---------- CSV Parser (robust) ---------- */
 function parseCSVRows(text, delim=','){
   const rows = [];
-  let cur=''; let row=[]; let inQuotes = false;
+  let cur='', row=[], inQuotes=false;
   for(let i=0;i<text.length;i++){
     const ch = text[i], next = text[i+1];
     if(ch === '"'){
@@ -69,7 +87,6 @@ function parseCSVRows(text, delim=','){
 }
 function detectAndParseCSV(text){
   let rows = parseCSVRows(text, ',');
-  // If only one column per row, maybe semicolon delimiter (DE Excel)
   if(rows.length && rows.every(r => r.length === 1)){
     const s = parseCSVRows(text, ';');
     if(s.length && s.some(r => r.length > 1)) rows = s;
@@ -77,7 +94,21 @@ function detectAndParseCSV(text){
   return rows.filter(r => r.some(c => (c||'').toString().trim() !== ''));
 }
 
-/* ---------- App Logic ---------- */
+/* ---------- Cleaning helper ---------- */
+function cleanField(s){
+  if(s === undefined || s === null) return '';
+  let t = String(s).trim();
+  // remove outer quotes
+  if((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))){
+    t = t.slice(1,-1);
+  }
+  // remove stray semicolons at start or end
+  t = t.replace(/^\s*;+\s*/,'').replace(/\s*;+\s*$/,'');
+  // remove repeated whitespace edges
+  return t.trim();
+}
+
+/* ---------- App logic ---------- */
 let questions = [];
 let currentIndex = 0;
 let hue = Math.floor(Math.random()*360);
@@ -85,15 +116,9 @@ const HUE_DELTA = 14;
 const statusEl = document.getElementById('status');
 const cardEl = document.getElementById('card');
 
-function setStatus(msg){
-  if(statusEl) statusEl.textContent = 'Status: ' + msg;
-}
+function setStatus(msg){ if(statusEl) statusEl.textContent = 'Status: ' + msg; }
 
-function changeBackground(){
-  hue = (hue + HUE_DELTA) % 360;
-  const h1 = hue, h2 = (hue + 40) % 360;
-  document.body.style.background = `linear-gradient(135deg,hsl(${h1} 60% 60%) 0%,hsl(${h2} 60% 45%) 100%)`;
-}
+function changeBackground(){ hue = (hue + HUE_DELTA) % 360; const h1 = hue, h2 = (hue + 40) % 360; document.body.style.background = `linear-gradient(135deg,hsl(${h1} 60% 60%) 0%,hsl(${h2} 60% 45%) 100%)`; }
 
 function showCard(){
   if(!cardEl) return;
@@ -103,57 +128,52 @@ function showCard(){
     return;
   }
   const q = questions[currentIndex];
-  cardEl.innerHTML = `<div class="card-id">${escapeHtml(q.id)}</div><div class="card-question">${escapeHtml(q.question)}</div>`;
+  // ID (nur Spalte A), Frage (Spalte B)
+  const idText = cleanField(q.id);
+  const questionText = cleanField(q.question);
+  cardEl.innerHTML = `<div class="card-id">${escapeHtml(idText)}</div><div class="card-question">${escapeHtml(questionText)}</div>`;
   changeBackground();
   setStatus(`Karte ${currentIndex+1} / ${questions.length}`);
 }
 
-/* minimal HTML-escape for inserted text */
-function escapeHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+/* small escape */
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/* load CSV and parse */
+/* load CSV */
 async function loadCSV(){
   setStatus('Lade cards.csv …');
   try {
-    const res = await fetch('cards.csv', {cache: 'no-store'});
-    if(!res.ok){
-      throw new Error('HTTP ' + res.status + ' ' + res.statusText);
-    }
+    const res = await fetch('cards.csv', {cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     const rows = detectAndParseCSV(text);
-    if(!rows.length) throw new Error('CSV ist leer oder fehlerhaft');
+    if(!rows.length) throw new Error('CSV leer oder fehlerhaft');
     // detect header row
     let start = 0;
     const firstLow = rows[0].map(c => String(c).toLowerCase());
     if(firstLow.some(c => /(^|\s|,)(id|frage|question|nummer|nr)(\s|,|$)/i.test(c))) start = 1;
-
     const parsed = [];
     for(let i=start;i<rows.length;i++){
       const r = rows[i];
-      const id = (r[0] ?? '').toString().trim() || String(i - start + 1);
-      // take column 1 as question; if empty use rest joined
-      let q = (r[1] ?? '').toString().trim();
-      if((!q || q.length===0) && r.length > 2) q = r.slice(1).join(',').trim();
-      if(q && q.length > 0) parsed.push({id, question: q});
+      const rawId = r[0] ?? '';
+      const rawQ = r[1] ?? r.slice(1).join(',');
+      const id = cleanField(rawId) || String(i - start + 1);
+      const question = cleanField(rawQ || '');
+      if(question) parsed.push({id, question});
     }
-
     questions = parsed;
-    if(questions.length === 0) throw new Error('Keine gültigen Fragezeilen gefunden (Spalte B fehlt?)');
+    if(questions.length === 0) throw new Error('Keine gültigen Fragezeilen (Spalte B leer?)');
     shuffleQuestions();
     currentIndex = 0;
     setStatus('Fragen geladen');
     showCard();
-  } catch (err) {
+  } catch(err){
     console.error(err);
-    // show user-friendly message and hint
     cardEl.innerHTML = `<div style="color:#b20; text-align:center; padding:12px;">
-      Fehler beim Laden der Datei.<br><br>
-      ${escapeHtml(err.message)}<br><br>
-      Stelle sicher, dass <code>cards.csv</code> im selben Ordner liegt und gültiges CSV ist (Spalte A = ID, Spalte B = Frage).
-      </div>`;
-    setStatus('Fehler: ' + err.message);
+      Fehler beim Laden der Datei.<br><br>${escapeHtml(err.message)}<br><br>
+      Prüfe: Datei <code>cards.csv</code> im gleichen Ordner, UTF-8, Spalte A = ID, Spalte B = Frage.
+    </div>`;
+    setStatus('Fehler: ' + (err.message || 'unbekannt'));
   }
 }
 
@@ -166,55 +186,26 @@ function shuffleQuestions(){
 
 /* ---------- Navigation ---------- */
 let startX = null, startY = null;
-
-document.addEventListener('touchstart', e => {
-  if(e.touches && e.touches[0]){ startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
-}, {passive:true});
-
-document.addEventListener('touchmove', e => {
-  if(startX === null || startY === null) return;
-  const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
-  const dx = Math.abs(cx - startX), dy = Math.abs(cy - startY);
-  if(dy > dx) e.preventDefault(); // prefer horizontal gesture
-}, {passive:false});
-
+document.addEventListener('touchstart', e => { if(e.touches && e.touches[0]){ startX = e.touches[0].clientX; startY = e.touches[0].clientY; } }, {passive:true});
+document.addEventListener('touchmove', e => { if(startX===null) return; const cx = e.touches[0].clientX, cy = e.touches[0].clientY; const dx = Math.abs(cx-startX), dy = Math.abs(cy-startY); if(dy>dx) e.preventDefault(); }, {passive:false});
 document.addEventListener('touchend', e => {
-  if(startX === null) return;
-  const endX = e.changedTouches[0].clientX;
-  const diff = endX - startX;
+  if(startX===null) return;
+  const endX = e.changedTouches[0].clientX; const diff = endX - startX;
   if(Math.abs(diff) > 50 && questions.length){
-    if(diff > 0) currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-    else currentIndex = (currentIndex + 1) % questions.length;
+    currentIndex = (currentIndex + (diff>0?-1:1) + questions.length) % questions.length;
     showCard();
   }
   startX = null; startY = null;
 }, {passive:true});
 
-document.getElementById('leftEdge').addEventListener('click', () => {
-  if(!questions.length) return;
-  currentIndex = (currentIndex - 1 + questions.length) % questions.length;
-  showCard();
-});
-document.getElementById('rightEdge').addEventListener('click', () => {
-  if(!questions.length) return;
-  currentIndex = (currentIndex + 1) % questions.length;
-  showCard();
-});
+document.getElementById('leftEdge').addEventListener('click', () => { if(!questions.length) return; currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); });
+document.getElementById('rightEdge').addEventListener('click', () => { if(!questions.length) return; currentIndex = (currentIndex + 1) % questions.length; showCard(); });
 
-document.addEventListener('keydown', e => {
-  if(!questions.length) return;
-  if(e.key === 'ArrowLeft'){ currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); }
-  if(e.key === 'ArrowRight'){ currentIndex = (currentIndex + 1) % questions.length; showCard(); }
-});
+document.addEventListener('keydown', e => { if(!questions.length) return; if(e.key === 'ArrowLeft'){ currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); } if(e.key === 'ArrowRight'){ currentIndex = (currentIndex + 1) % questions.length; showCard(); } });
 
-/* prevent zoom gesture on iOS */
 ['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 
-/* start */
 loadCSV();
-
-/* Expose for debug in console if needed */
-window._cardsApp = { loadCSV, questions };
 </script>
 </body>
 </html>
