@@ -1,201 +1,220 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
   <title>Karten-App</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html,body { height: 100%; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      height: 100vh;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      touch-action: pan-x;
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display:flex;height:100vh;align-items:center;justify-content:center;
+      overflow:hidden; touch-action: pan-x;
       transition: background 650ms ease;
       background: linear-gradient(135deg, hsl(240 60% 60%) 0%, hsl(280 60% 45%) 100%);
     }
-
-    .card-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      padding: 24px;
+    .card-container{width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;padding:24px}
+    .card{
+      width:90%;max-width:660px;min-height:320px;padding:32px;background:white;border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.18);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
     }
-
-    .card {
-      width: 90%;
-      max-width: 600px;
-      min-height: 300px;
-      padding: 32px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-      text-align: center;
-      user-select: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      line-height: 1.4;
+    .card-id{font-weight:800;color:#222;font-size:clamp(2rem,5vw,3rem);margin-bottom:18px}
+    .card-question{font-size:clamp(1rem,2.6vw,1.9rem);color:#111;white-space:pre-wrap;word-break:break-word;text-align:center}
+    .edge-touch{position:absolute;top:0;height:100%;width:20%;z-index:10}
+    .left-edge{left:0} .right-edge{right:0}
+    .status{
+      position: absolute; left: 12px; bottom: 12px; font-size: 13px; color: rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.7); padding:6px 8px; border-radius:8px;
+      backdrop-filter: blur(4px);
     }
-
-    .card-id {
-      font-weight: 800;
-      color: #222;
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin-bottom: 20px;
-    }
-
-    .card-question {
-      font-size: clamp(1rem, 2.6vw, 1.9rem);
-      color: #111;
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
-
-    .edge-touch {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      width: 20%;
-      z-index: 10;
-    }
-    .left-edge { left: 0; }
-    .right-edge { right: 0; }
-
-    @media (max-width: 360px) {
-      .card { padding: 20px; border-radius: 14px; }
-      .card-id { font-size: 1.7rem; margin-bottom: 14px; }
-    }
+    @media(max-width:360px){ .card{padding:20px;border-radius:14px} .card-id{font-size:1.7rem;margin-bottom:14px} }
   </style>
 </head>
 <body>
   <div class="card-container">
-    <div class="edge-touch left-edge" id="leftEdge"></div>
-    <div class="edge-touch right-edge" id="rightEdge"></div>
+    <div class="edge-touch left-edge" id="leftEdge" aria-hidden="true"></div>
+    <div class="edge-touch right-edge" id="rightEdge" aria-hidden="true"></div>
 
     <div class="card" id="card">
       Lade Fragen…
     </div>
+
+    <div class="status" id="status">Status: Initialisiere…</div>
   </div>
 
-  <script>
-    /* CSV Parser und Logik wie vorher, nur die Darstellung angepasst */
+<script>
+/* ---------- Robuster CSV-Parser ---------- */
+function parseCSVRows(text, delim=','){
+  const rows = [];
+  let cur=''; let row=[]; let inQuotes = false;
+  for(let i=0;i<text.length;i++){
+    const ch = text[i], next = text[i+1];
+    if(ch === '"'){
+      if(inQuotes && next === '"'){ cur += '"'; i++; continue; }
+      inQuotes = !inQuotes;
+      continue;
+    }
+    if(!inQuotes && ch === delim){
+      row.push(cur); cur=''; continue;
+    }
+    if(!inQuotes && (ch === '\n' || ch === '\r')){
+      if(ch === '\r' && text[i+1] === '\n') i++;
+      row.push(cur); rows.push(row); row=[]; cur=''; continue;
+    }
+    cur += ch;
+  }
+  if(cur !== '' || row.length>0){ row.push(cur); rows.push(row); }
+  return rows;
+}
+function detectAndParseCSV(text){
+  let rows = parseCSVRows(text, ',');
+  // If only one column per row, maybe semicolon delimiter (DE Excel)
+  if(rows.length && rows.every(r => r.length === 1)){
+    const s = parseCSVRows(text, ';');
+    if(s.length && s.some(r => r.length > 1)) rows = s;
+  }
+  return rows.filter(r => r.some(c => (c||'').toString().trim() !== ''));
+}
 
-    function parseCSVRows(text, delim = ',') {
-      const rows = [];
-      let row = [], cur = '', inQuotes = false;
-      for (let i = 0; i < text.length; i++) {
-        const ch = text[i], next = text[i+1];
-        if (ch === '"') {
-          if (inQuotes && next === '"') { cur += '"'; i++; }
-          else { inQuotes = !inQuotes; }
-          continue;
-        }
-        if (!inQuotes && ch === delim) { row.push(cur); cur = ''; continue; }
-        if (!inQuotes && (ch === '\n' || ch === '\r')) {
-          if (ch === '\r' && text[i+1] === '\n') i++;
-          row.push(cur); rows.push(row);
-          row = []; cur = '';
-          continue;
-        }
-        cur += ch;
-      }
-      if (cur !== '' || row.length > 0) { row.push(cur); rows.push(row); }
-      return rows;
+/* ---------- App Logic ---------- */
+let questions = [];
+let currentIndex = 0;
+let hue = Math.floor(Math.random()*360);
+const HUE_DELTA = 14;
+const statusEl = document.getElementById('status');
+const cardEl = document.getElementById('card');
+
+function setStatus(msg){
+  if(statusEl) statusEl.textContent = 'Status: ' + msg;
+}
+
+function changeBackground(){
+  hue = (hue + HUE_DELTA) % 360;
+  const h1 = hue, h2 = (hue + 40) % 360;
+  document.body.style.background = `linear-gradient(135deg,hsl(${h1} 60% 60%) 0%,hsl(${h2} 60% 45%) 100%)`;
+}
+
+function showCard(){
+  if(!cardEl) return;
+  if(questions.length === 0){
+    cardEl.innerHTML = '<div style="color:#666">Keine Fragen gefunden.</div>';
+    setStatus('Keine Fragen in cards.csv');
+    return;
+  }
+  const q = questions[currentIndex];
+  cardEl.innerHTML = `<div class="card-id">${escapeHtml(q.id)}</div><div class="card-question">${escapeHtml(q.question)}</div>`;
+  changeBackground();
+  setStatus(`Karte ${currentIndex+1} / ${questions.length}`);
+}
+
+/* minimal HTML-escape for inserted text */
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* load CSV and parse */
+async function loadCSV(){
+  setStatus('Lade cards.csv …');
+  try {
+    const res = await fetch('cards.csv', {cache: 'no-store'});
+    if(!res.ok){
+      throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    }
+    const text = await res.text();
+    const rows = detectAndParseCSV(text);
+    if(!rows.length) throw new Error('CSV ist leer oder fehlerhaft');
+    // detect header row
+    let start = 0;
+    const firstLow = rows[0].map(c => String(c).toLowerCase());
+    if(firstLow.some(c => /(^|\s|,)(id|frage|question|nummer|nr)(\s|,|$)/i.test(c))) start = 1;
+
+    const parsed = [];
+    for(let i=start;i<rows.length;i++){
+      const r = rows[i];
+      const id = (r[0] ?? '').toString().trim() || String(i - start + 1);
+      // take column 1 as question; if empty use rest joined
+      let q = (r[1] ?? '').toString().trim();
+      if((!q || q.length===0) && r.length > 2) q = r.slice(1).join(',').trim();
+      if(q && q.length > 0) parsed.push({id, question: q});
     }
 
-    function detectAndParseCSV(text) {
-      let rows = parseCSVRows(text, ',');
-      if (rows.every(r => r.length === 1)) {
-        const semi = parseCSVRows(text, ';');
-        if (semi.some(r => r.length > 1)) rows = semi;
-      }
-      return rows.filter(r => r.some(cell => (cell||'').trim() !== ''));
-    }
+    questions = parsed;
+    if(questions.length === 0) throw new Error('Keine gültigen Fragezeilen gefunden (Spalte B fehlt?)');
+    shuffleQuestions();
+    currentIndex = 0;
+    setStatus('Fragen geladen');
+    showCard();
+  } catch (err) {
+    console.error(err);
+    // show user-friendly message and hint
+    cardEl.innerHTML = `<div style="color:#b20; text-align:center; padding:12px;">
+      Fehler beim Laden der Datei.<br><br>
+      ${escapeHtml(err.message)}<br><br>
+      Stelle sicher, dass <code>cards.csv</code> im selben Ordner liegt und gültiges CSV ist (Spalte A = ID, Spalte B = Frage).
+      </div>`;
+    setStatus('Fehler: ' + err.message);
+  }
+}
 
-    let questions = [];
-    let currentIndex = 0;
-    let hue = Math.floor(Math.random() * 360);
-    const HUE_DELTA = 14;
+function shuffleQuestions(){
+  for(let i=questions.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+}
 
-    async function loadCSV() {
-      try {
-        const res = await fetch('cards.csv');
-        const text = await res.text();
-        loadFromCSVText(text);
-      } catch {
-        document.getElementById('card').textContent = "Fehler beim Laden der CSV.";
-      }
-    }
+/* ---------- Navigation ---------- */
+let startX = null, startY = null;
 
-    function loadFromCSVText(text) {
-      const rows = detectAndParseCSV(text);
-      let start = 0;
-      if (rows.length > 0) {
-        const first = rows[0].map(c => c.toLowerCase());
-        if (first.some(c => c.includes("id") || c.includes("frage"))) start = 1;
-      }
-      questions = rows.slice(start).map((r,i) => ({
-        id: (r[0]||String(i+1)).trim(),
-        question: (r[1] || r.slice(1).join(',')).trim()
-      })).filter(q => q.question);
-      shuffleQuestions();
-      currentIndex = 0;
-      showCard();
-    }
+document.addEventListener('touchstart', e => {
+  if(e.touches && e.touches[0]){ startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
+}, {passive:true});
 
-    function shuffleQuestions() {
-      for (let i = questions.length-1; i>0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [questions[i], questions[j]] = [questions[j], questions[i]];
-      }
-    }
+document.addEventListener('touchmove', e => {
+  if(startX === null || startY === null) return;
+  const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
+  const dx = Math.abs(cx - startX), dy = Math.abs(cy - startY);
+  if(dy > dx) e.preventDefault(); // prefer horizontal gesture
+}, {passive:false});
 
-    function changeBackground() {
-      hue = (hue + HUE_DELTA) % 360;
-      const h1 = hue, h2 = (hue+40)%360;
-      document.body.style.background = 
-        `linear-gradient(135deg,hsl(${h1} 60% 60%) 0%,hsl(${h2} 60% 45%) 100%)`;
-    }
+document.addEventListener('touchend', e => {
+  if(startX === null) return;
+  const endX = e.changedTouches[0].clientX;
+  const diff = endX - startX;
+  if(Math.abs(diff) > 50 && questions.length){
+    if(diff > 0) currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+    else currentIndex = (currentIndex + 1) % questions.length;
+    showCard();
+  }
+  startX = null; startY = null;
+}, {passive:true});
 
-    function showCard() {
-      const cardEl = document.getElementById('card');
-      if (questions.length === 0) { cardEl.textContent = 'Keine Fragen gefunden.'; return; }
-      const q = questions[currentIndex];
-      cardEl.innerHTML = `
-        <div class="card-id">${q.id}</div>
-        <div class="card-question">${q.question}</div>`;
-      changeBackground();
-    }
+document.getElementById('leftEdge').addEventListener('click', () => {
+  if(!questions.length) return;
+  currentIndex = (currentIndex - 1 + questions.length) % questions.length;
+  showCard();
+});
+document.getElementById('rightEdge').addEventListener('click', () => {
+  if(!questions.length) return;
+  currentIndex = (currentIndex + 1) % questions.length;
+  showCard();
+});
 
-    // Navigation (Swipe & Taps)
-    let startX=null;
-    document.addEventListener("touchstart",e=>{ if(e.touches[0]) startX=e.touches[0].clientX; });
-    document.addEventListener("touchend",e=>{
-      if(startX===null) return;
-      const diff=e.changedTouches[0].clientX-startX;
-      if(Math.abs(diff)>50){
-        currentIndex=(currentIndex+(diff>0?-1:1)+questions.length)%questions.length;
-        showCard();
-      }
-      startX=null;
-    });
-    document.getElementById('leftEdge').onclick=()=>{currentIndex=(currentIndex-1+questions.length)%questions.length;showCard();};
-    document.getElementById('rightEdge').onclick=()=>{currentIndex=(currentIndex+1)%questions.length)%questions.length;showCard();};
-    document.addEventListener('keydown',e=>{
-      if(e.key==="ArrowLeft"){currentIndex=(currentIndex-1+questions.length)%questions.length;showCard();}
-      if(e.key==="ArrowRight"){currentIndex=(currentIndex+1)%questions.length;showCard();}
-    });
+document.addEventListener('keydown', e => {
+  if(!questions.length) return;
+  if(e.key === 'ArrowLeft'){ currentIndex = (currentIndex - 1 + questions.length) % questions.length; showCard(); }
+  if(e.key === 'ArrowRight'){ currentIndex = (currentIndex + 1) % questions.length; showCard(); }
+});
 
-    loadCSV();
-  </script>
+/* prevent zoom gesture on iOS */
+['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+
+/* start */
+loadCSV();
+
+/* Expose for debug in console if needed */
+window._cardsApp = { loadCSV, questions };
+</script>
 </body>
 </html>
