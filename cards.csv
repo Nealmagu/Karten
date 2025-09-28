@@ -1,9 +1,9 @@
 ﻿Nummer;Frage
 F0001;Für wie viel Geld würdest du deinen kleinen Finger operativ entfernen lassen?
 F0002;Für einen kleinen Finger 100.000€ oder für beide keinen Finger 700.000€? 
-F0003;Würdest du für 2 Mio € jetzt direkt 2 Jahre älter sein?
-F0004;Würdest du für 20 Mio € dein linkes Auge entfernen lassen?
-F0005;Würdest du für 2 Mio € 2 Jahre blind sein ?
+F0003;Würdest du für 2 Mio. € jetzt direkt 2 Jahre älter sein?
+F0004;Würdest du für 20 Mio. € dein linkes Auge entfernen lassen?
+F0005;Würdest du für 2 Mio. € 2 Jahre blind sein ?
 F0006;Pro Haarwurzel erhältst du 20€. Wie viele würdest du entfernen lassen? Ausgehend von ca. 100.000 Haarwurzeln
 F0007;Würdest du mit dem Wissen jetzt die Zeit um 15 Jahre zurück drehen? 
 F0008;Würdest du lieber taub oder blind sein?
@@ -54,11 +54,11 @@ F0052;Du hast die Chance Hitler zu stoppen, musst ihn aber als Baby umbringen. W
 F0053;Es gibt 1000 Trauben. Für jede Traube die du isst, bekommst du 50.000€. Aber eine Traube ist tödlich. Wie viele isst du?
 F0054;Du musst 10 Jahre lang in einem alter bleiben. Welches nimmst du?
 F0055;Würdest du für 1 Mio. € jedes mal wenn du lachst für 3 Minuten rückwärts laufen?
-F0056;Entweder du bekommst 200.000€ oder du sagst nein und irgendeine zufällige Person auf der Welt bekommt 2 Mio € ?
+F0056;Entweder du bekommst 200.000€ oder du sagst nein und irgendeine zufällige Person auf der Welt bekommt 2 Mio. € ?
 F0057;Du bekommst 10 Mio. €, aber jedes mal wenn du eine Person anlügst, bekommt eine zufällige Person auf der Welt einen Stromschlag
 F0058;Würdest du für 50 Mio. € 2 Jahre lang untertauchen und du darfst niemanden erzählen davon?
 F0059;Für wie viel Geld würdest du eine Woche lang auf der Straße leben (Winter und Sommer)?
-F0060;Würdest du lieber deinen Traumberuf für 1.800€ netto ausüben oder einen der dir mittelmäßig gefäät für 4.500€ netto
+F0060;Würdest du lieber deinen Traumberuf für 1.800€ netto ausüben oder einen der dir mittelmäßig gefällt für 4.500€ netto
 F0061;Würdest du lieber entscheiden können, wie viele Leute dich respektieren oder dir vertrauen?
 F0062;Du bekommst 10 Mio. €, aber hast ab dann immer von 9 Uhr Abends bis morgens um 3 Uhr Fieber. Würdest du das tun?
 F0063;Entweder du findest deine Frau immer wunderschön, wie beim ersten mal verliebt sein, aber alle anderen finden sie richtig hässlich oder es bleibt alles wie es ist.
@@ -107,7 +107,7 @@ F0105;Du verlierst ein Ohr, aber Hörst doppelt so gut hören?
 F0106;Du bekommst eine Superkraft. Entweder kannst du dich einmal pro Woche für 5 Minuten unsichtbar machen oder du kannst mit Tauben sprechen
 F0107;Jedes mal wenn du nießen musst verwandeln sich deine Klamotten in ein Clownskostüm oder wenn du furzen musst, ertönt eine laute Trompete
 F0108;Du musst eine Woche lang mit einem Lama in deiner Wohnung leben oder du schläfst eine Woche lang mit einer Ratte von der Straße in einem Bett
-F0109;Würdest du nur noch mit den Händen essen oder nie wieder telefonieren dürfen (auch nicht Skype, Spachnachrichten…)
+F0109;Würdest du nur noch mit den Händen essen oder nie wieder telefonieren dürfen (auch nicht Skype, Sprachnachrichten…)
 F0110;Würdest du lieber bis zu 10 Millionen  € bekommen oder du Menschen durch Berührung sexuell erregen ohne dass die wissen was los ist und du kannst sogar kontrollieren wie stark
 F0111;Würdest du lieber unter Wasser atmen können oder fliegen können?
 F0112;Hast du lieber 10 mal mehr Geld oder 10 mal mehr Freunde (gleichwertige Freunde)
@@ -121,3 +121,207 @@ F0119;Entweder du schnarchst extrem laut oder dein Partner schnarcht extrem laut
 F0120;Für wie viel € würdest du deine Mutter dein komplettes Handy durchgucken lassen?
 F0121;Du bekommst 500.000€ aber dafür musst du jedem immer sagen, was du gerade über die Person denkst
 F0122;Du bist super reich aber hast keine Freunde oder bist arm und hast viele echte Freunde
+F0123;Du kannst extrem gut hören, wenn du willst, aber musst jeden Monat 150€ dafür zahlen.
+F0124;Du kannst von anderen Menschen Lebenszeit abziehen, wem und wie viel?
+F0125;Du bekommst 2 Mio. € aber musst mit einer Lanze gegen einen Wolf kämpfen
+F0126;Würdest du für 100.000€ eine extrem hohe Micky Maus Stimme
+F0127;Würdest du eine Woche nicht duschen oder eine Woche nicht Zähne putzen?
+F0128;Du musst eins wählen: Du bist extrem eitel, geizig, faul oder neidisch
+F0129;Würdest du eher wissen wollen wann du stirbst oder wie du stirbst?
+F0130;Du und fünf Leute deiner Wahl können unsterblich werden (Kannst selber entscheiden wann du stirbst)
+F0131;Würdest du für 15.000€ für 2 Wochen in ein deutsches Gefängnis?
+F0132;Du bekommst 350.000€ und dafür schmeckt jedes Getränk nach Bier
+F0133;Würdest du dir für 2000€ die Lippen spritzen lassen?
+F0134;Für jeden Zahn den du dir ziehen lässt bekommst du 100.000€. Wie viele lässt du dir ziehen?
+F0135;Du wirfst einen Würfel und bekommst du die Augenzahl mal 1. Mio. €. Aber bei einer 1 verlierst du eine Hand. Wie oft würfelst du?
+F0136;Du kannst in die Vergangenheit reisen, aber es muss das Mittelalter sein und musst dort 2 Wochen verweilen. Würdest du es machen?
+F0137;Für wie viel Geld würdest du 1 Jahr lang immer mit einem Lügendetektor rumlaufen. Immer wenn du lügst piepst er.
+F0138;Würdest du für 250.000€ nie wieder Filme oder Serien gucken?
+F0139;Du verlierst die Haare auf dem Kopf oder deine Augenbrauen? Was wählst du?
+F0140;Du bekommst 1 Mio. € für jedes Jahr das du früher stirbst. Wie viele gibst du ab?
+F0141;Du verlierst einen zufälligen Freund und dafür bekommen beide 50.000€
+F0142;Würdest du jeden Tag 12 Stunden, kein Wochenende, kein Urlaub, keine Reisen, dafür mit 67 Multimillionär sein oder nur 4 Stunden am Tag arbeiten, deine Leben leben, Reisen, dein Leben genießen aber mit 67 arm sein
+F0143;Würdest du für 5.000€ ein Glas Wasser aus dem Ganges trinken?
+F0144;Du kannst mit einer berühmten Person deiner Wahl 2 Wochen Urlaub machen, alles ganz normales, aber nach diesen 2 Wochen hasst diese Person dich über alles
+F0145;Du kannst für immer unsterblich verliebt in deine Frau sein oder sie ist für immer unsterblich verliebt in dich. Was wählst du ?
+F0146;Würdest du eher für 20 Jahre aufs Auto fahren oder aufs fliegen verzichten?
+F0147;Du bekommst 100.000€ aber dafür hast du für immer ein bisschen Mundgeruch
+F0148;Du bekommst für den Rest deines Lebens jeden Tag 1.000€ angeboten. Aber du vergisst jedes mal einen zufälligen Fakt über dich selbst. Wie oft würdest du das Geld annehmen?
+F0149;Du bekommst 5 zufällige Häuser in Deutschland oder 50 Neuwagen 
+F0150;Traumauto oder Traumeinrichtung in deiner Wohnung?
+F0151;Würdest du eine zufällige Person für 1 Mio. 1 Jahr ins Gefängnis bringen, auch wenn sie unschuldig ist?
+F0152;Du kannst unglaublich witzig sein, oder kannst unglaublich gut argumentieren
+F0153;Würdest du eine 6 Monatige Solo Weltreise machen oder 2 Wochen 5 Sterne Urlaub mit 10 Freunden deiner Wahl
+F0154;Würdest du, wenn du erfahren kannst wann du stirbst, es erfahren wollen?
+F0155;Du bekommst 12.000€ aber entwickelst eine panische Angst vor Regenbögen
+F0156;Du bist bei einer Familienfeier. Du musst dich entscheiden. Entweder bist nur du plötzlich nackt oder alle außer dir sind plötzlich nackt?
+F0157;Du bekommst 1 Mio. € aber bist dann Farbenblind
+F0158;Entweder musst du jedes Getränk nur noch mit einem Löffel trinke oder jedes Essen nur noch mit einer Grillzange essen
+F0159;Du musst einen Tag lang 5 zufällige Personen aus deinem Freundeskreis alles sagen, was du über sie denkst, dafür bekommst du einen bezahlten Urlaub
+F0160;Du bekommst 10 Mio. € aber dafür musst du jedes Mal, wenn du Geld ausgibst, ein Kassengeräusch machen und auf einmal kommt eine Ente neben dir an und schnattert sehr laut.
+F0161;Zehn Jahre ins Gefängnis und bekommst 50 Mio. € oder 5 Jahre für 5 Mio. Aber eins musst du nehmen
+F0162;Du bekommst 100.000€ aber dafür darfst du nie wieder zum gleichen Frisör gehen
+F0163;Du bekommst 250.000€ aber dafür darfst du keine Kinder mehr bekommen
+F0164;Würdest du für 100.000€ nur noch durch den Mund atmen können?
+F0165;Würdest du 1 Mio. € Schuhgröße 34 haben?
+F0166;Du kommst 2 Jahre ins Gefängnis und dein bester Freund bekommt 1 Mio. € oder er kommt 2 Jahre ins Gefängnis und du bekommst 1 Mio. €. Du entscheidest.
+F0167;Du kannst deine Mutter nur noch sehen oder hören. Was nimmst du ?
+F0168;Du bekommst 100. Mio. € aber lebst in einem zufällig ausgewähltem Land und darfst es nie wieder verlassen
+F0169;Für wie viel Geld würdest du nie wieder Bilder schießen können und auch keine mehr erhalten können?
+F0170;Würdest du lieber Sex mit deiner Freundin haben im Körper deiner Mutter oder Sex mit deiner Mutter haben im Körper deiner Freundin?
+F0171;Würdest du lieber heilende Kräfte haben, die du bis zehn Minuten nach dem Tod noch einsetzen kannst oder du kannst Menschen und Tiere in ihrem handeln manipulieren
+F0172;Würdest du für 10 Mio. € eine Schnecke küssen, die dich dann für immer langsam verfolgt und wenn sie dich berührt, stirbst du
+F0173;Entweder hast du einen perfekten Körperbau aber darfst nie wieder Lügen oder kannst perfekt lügen und kannst nie wieder Sport machen
+F0174;Du findest immer und überall den perfekten Parkplatz aber musst dafür monatlich 100€ zahlen
+F0175;Du kannst nur noch mit einem Geschlecht sprechen. Welches nimmst du?
+F0176;Du bist der perfekte Hundepsychologe, aber darfst dann auch nur noch damit Geld verdienen
+F0177;Du darfst Donnerstags nicht sitzen, aber brauchst dafür auch Donnerstags kein Schlaf
+F0178;Du bekommst jeden Monat 2.000€ aber kannst dir dafür keine Namen mehr merken
+F0179;Würdest du lieber 4 oder 6 Finger pro Hand haben?
+F0180;Würdest du für 10 Mio. € in Nordkorea in der Öffentlichkeit urinieren?
+F0181;Du bekommst 100.000€ aber musst dafür 1 Jahr lang nach jedem Satz Alter sagen.
+F0182;Du bist blind, aber dafür ist deine Familie für immer Reich und gesund
+F0183;Du kannst alle Kriege der Welt beenden, aber dafür musst du mit einem Obdachlosen tauschen
+F0184;Würdest du für 50 Mio. € 1 Jahr lang alleine auf dem Mars leben?
+F0185;Würdest du für 250.000€ nie wieder Urlaub machen können?
+F0186;Du bekommst 20 Mio. € es gibt 20 Fallschirme. Ein Fallschirm funktioniert nicht. 
+F0187;Würdest du für 100.000€ in einem Klärbecken springen und  schwimmen. 25 Meter schwimmen
+F0188;Würdest du deine Traumfrau heiraten. Aber sie will 1-2 mal die Woche in einer Ritterrüstung draußen rumlaufen
+F0189;Für immer Mundgeruch oder für immer Schweißgeruch?
+F0190;Du musst jeden morgen eine Knoblauchzehe essen. Du bekommst für jede Zehe 50€. Wie viele isst du?
+F0191;Würdest du her dein Gedächtnis verlieren inkl. Alle Erinnerungen oder alle  anderen die dich kennen vergessen ihre Erinnerung an dich 
+F0192;Ein 100 Meter langer Gang, du stehst bei Meter 70. Ein Tier der trainiert ist dich zu jagen startet bei Meter 0. Wenn du es schaffst bekommst du 500.000€. Die Tür am ende des Ganges öffnet zusätzlich nach innen.
+F0193;Immer, wenn du das Licht anmachst, fängt es an zu stinken oder jedes mal wenn du einen Hund siehst musst du ihn anbellen
+F0194;Würdest du für eine Million es in kauf nehmen, dass jeder in deiner Umgebung für 1 Jahr lang nur noch rückwärts reden kann
+F0195;Würdest du deiner Freundin für 200.000€ einmal die Woche passiv aggressiv sagen, dass sie zu dick ist. (Willst du wirklich noch mehr essen Schatz?)
+F0196;Würdest du 300.000€, aber ab dann sind dein Haare immer wenn du sie wäschst Schulter lang
+F0197;Würdest du für 2 Mio. € direkt 5 Jahre älter sein. Alle anderen bleiben gleich alt.
+F0198;Würdest du für 50.000€  5 Jahre eine verrutschte Bettdecke im Bettbezug haben.
+F0199;Entweder du siehst dich im Spiegel richtig hübsch und alle anderen sehen dich hässlich oder du siehst dich hässlich und alle anderen hübsch
+F0200;Würdest du alle Krankheiten der Welt auf dich nehmen und dafür sind alle Menschen die sie haben geheilt
+F0201;Würdest du für 1 Mio. € einen süßen Hund töten.
+F0202;Für wie viel Geld würdest du jedes mal wenn ein Krankenwagen and dir vorbei fährt laut wie ein Wolf heulen?
+F0203;Du bekommst 1 Mio. € wenn du es schaffst 1 Jahr lang nur Englisch zu sprechen, wenn du auch nur 1 Wort auf Deutsch sagt, musst du 10.000€ zahlen
+F0204;Für immer müde egal wie viel du schläfst oder immer hungrig egal wie viel zu isst
+F0205;Du bekommst 100.000€ musst aber 1 Jahr lang, bei jedem Streit zugeben, dass du falsch liegst, auch wenn es nicht stimmt
+F0206;Du bekommst 60.000€ aber darfst nie wieder die linke Spur benutzen.
+F0207;1 mal die Woche kackt dir entweder ein Vogel auf die Schulter oder du trittst in Hundescheiße
+F0208;Würdest du lieber dafür berühmt sein, dass du total dumm oder total arrogant bist
+F0209;Für jeden Monat in dem du einwilligst bekommst du 25.000€. Aber wenn du einmal ablehnst kommt das Angebot nie wieder. In diesem Monat kannst du weder lesen noch schreiben.
+F0210;Hättest du lieber einen Nippel in der Mitte oder zwei Bauchnabel unten links und rechts.
+F0211;Du bekommst 300.000€ aber dafür wirst du 2 mal im Monat laut furzen für mindestens 3 Sekunden und du weißt nicht wann der kommen wird.
+F0212;Lieber für immer ein T-Shirt das nach oben rutscht oder eine Hose die nach unten rutscht
+F0213;Du bekommst 10.000€ pro Punkt in Flensburg, aber die erlischen nicht mehr. Wie viel nimmst du?
+F0214;Du bekommst 3,5 Mio. € aber dafür darfst du nur noch 1 mal die Woche duschen.
+F0215;Du bekommst 50.000€ aber dafür musst du 2 Jahre lang, immer wenn Ungeziefer in deiner Wohnung ist vor deiner Freundin panische Angst davor haben
+F0216;Du bekommst 173.000€ aber darfst nie wieder pures Wasser trinken, nur noch in Mischform
+F0217;Würdest du lieber gegen 1 Leoparden kämpfen oder 66 Katzen
+F0218;Ein Fremder kommt zu dir und bietet 5 Mio. €. Aber dafür schuldest du ihm einen Gefallen den er irgendwann einlösen kann.
+F0219;Du bekommst 15.000€ aber dafür ist deine Freundin  richtig schlecht gelaunt und richtig sauer auf dich.
+F0220;Ein sehr reicher Mann kommt zu dir und bietet dir 50 Mio.€ Aber dafür bist du für 1 Monat lang sein Hund mit Hundeleine, Halsband und co.
+F0221;Du bekommst 120.000€ aber darfst nie wieder ChatGPT oder andere Form der KI benutzen
+F0222;Würdest du lieber 1 Jahr lang nur noch rückwärts laufen oder nur noch singen statt reden.
+F0223;Du bekommst jedes Jahr 7.000€ netto, aber dafür darfst du nie wieder eine Spülmaschine benutzen.
+F0224;Hast du lieber doppelt so große Hände oder Schuhgröße 34
+F0225;Würdest du für 300.000€ nur noch auffällig schlecht gefälschte Kleidung von Gucci tragen.
+F0226;Würdest du für 20.000€ deinen Eltern am Telefon sagen, dass du sie nicht mehr liebst und für einen Monat den kontakt abbrechen. Danach kannst du alles aufdecken und auflösen.
+F0227;Du bekommst 30. Mio. € die du in 30 Tagen ausgeben musst. Du darfst nach diesen 30 Tagen, nicht mehr in Besitz haben als heute. Du darfst das Geld auch nicht Verbrennen oder dir teure Dinge holen, die du zerstörst. Alles muss dafür genutzt werden, wofür es da ist. du kannst auch Service in Anspruch nehmen, aber musst in sinngemäß vergüten und benutzen. Du darfst keine Geschenke machen oder Wetten abschließen. Schaffst du es bekommst du nochmal 30 Mio. € wenn nicht muss du für alles selber aufkommen.
+F0228;Du bekommst 5 Mio. € aber dafür musst du deiner Partnerin sagen, dass du fremdgegangen bist auch wenn's nicht stimmt
+F0229;Würdest du lieber 5 Mio. € annehmen oder lernst deine TraumTraumTraumfrau kennen.
+F0230;Lieber volles Haar oder 250.000€
+F0231;Würdest du für 1,5 Mio.€ deiner Mutter sagen, dass du drogenabhängig bist und ihr Geld gestohlen hast. Du darfst es nie auflösen.
+F0232;Würdest du lieber blind und taub oder querschnittsgelähmt sein?
+F0233;Lieber dauerhaft eine unkontrollierbare Zunge die dauerhaft raushängt oder du sabberst immer leicht bei Gesprächen.
+F0234;Du bekommst 10 Mio. € aber dafür lebst du 1 Jahr lang in einem Käfig. Du wirst gut ernährt, darfst aber nicht sprechen und immer wenn Gäste kommen musst du singen.
+F0235;Hättest du lieber 3 Nasenlöcher oder eins ?
+F0236;Würdest du für 50.000€ nur aus einem Napf essen. Egal wo. Auch in der Öffentlichkeit. Du darfst wenn du gefragt wirst ob du Essen gehen willst nicht ablehnen
+F0237;Du wirst weltberühmt und reich aber dafür erkennt dich niemand der dich liebt erkennt dich wieder.
+F0238;Du musst 24 Stunden lang von einem Bösewicht aus einem Horrorfilm verfolgt. Wen nimmst du?
+F0239;Lieber dein ganzer Körper ist so leicht klebrig oder du machst immer ein kleines quietsch Geräusch wenn du läufst
+F0240;Du darfst so viele Millionen € nehmen wie du willst, aber für jede Million steigt die Erderwärmung um 0,1 °C
+F0241;Du bekommst 1 Mio. €, aber dafür musst du einem deiner besten Freunde erzählen, dass du seiner Freundin einen Zungenkuss gegeben hast.
+F0242;Du bekommst 1 Mio.€ oder eine beliebige Person deiner Wahl bekommt 3 Mio.€, aber die Person weiß nicht, dass die von dir kommen.
+F0243;Entweder immer leicht verschwitze Hände oder du kannst nie wieder richtigen Augenkontakt mit Menschen halten.
+F0244;Du bekommst 250.000€ für jeden cm den du schrumpfst.
+F0245;Entweder du stinkst extrem nach Pferdekacke oder du isst jeden Tag 3 Gramm deines eigenen Kots essen.
+F0246;Du bist in einer Beziehung und hast einen Fremdgehjoker mit einem Promi. Wenn nimmst du ?
+F0247;Für wie viel würdest du dich gegen Mike Tysen in seiner Peak in den Ring stellen?
+F0248;Du bekommst 50.000€ und musst einen 100 Meter Sprint gegen Usain Bolt machen. Jeder Meter Vorsprung, kostet dich 1.000€. Wie viel Vorsprung willst du haben?
+F0249;Du bekommst 221.000€. Aber musst zu allem was du isst, 100g Hackfleisch essen.
+F0250;Hättest du lieber keine Knie oder keine Ellbogen. Also keine Beweglichkeit in dem Gelenk.
+F0251;Entweder dir ist permanent kalt oder permanent warm. Beides unangenehm extrem.
+F0252;"Du bist mit deiner Traumfrau zusammen. Du willst sie heiraten, aber du musst vorher Folgendes machen. Du bekommst 1 Mio.. Du musst in einem vollen Stadion ihr einen Heiratsantrag machen, auf die Knie gehen und bevor sie was sagt, sagst du ""HAHA Verarscht"" rennst weg, 24 Stunden musst du das aushalten und danach darfst du es auflösen."
+F0253;Würdest du für 500.000€ nie wieder wissen wie deine Lieblingsmannschaft gespielt hat?
+F0254;Entweder du darfst nie wieder deine Wohnung verlassen, aber deine Familie darf dich besuchen oder du kannst alles machen, aber du darfst deine Familie nie wieder sehen.
+F0255;Würdest du 10.000€ nehmen aber dein Feind/Person die du am meisten hasst (Privates Umfeld) bekommt 100.000€
+F0256;Du bekommst 1 Mio. €. Aber du musst mit einer Person deiner Wahl 1 Stunde in einen Raum eingeschlossen sein und ihr dürft nicht lachen. Wenn ihr lacht müsst ihr 10.000€ zahlen
+F0257;100.000€ für jeden cm kleines Schwanz. Wie viel?
+F0258;Du bekommst 300.000€ und musst für 1 Jahr folgenden Deal eingehen. Jedes mal wenn du einschläfst wachst du irgendwo in Deutschland auf (nichts gefährliches)
+F0259;Du bekommst 10.000€ und musst vor allen Leuten im Freibad so tun als wenn du ertrinkst. Ohnmächtig spielen und co. Und wenn du gerettet wirst musst du rufen HAHA Verarscht
+F0260;Du bekommst 10 Mio.€ und dafür verliert irgendeine Person auf der Welt ihr gesamtes Vermögen.
+F0261;Du bekommst 500.000€ und musst eine deiner Top3 Leidenschaften für immer aufgeben
+F0262;Du bekommst 2 Mio. € aber dafür verlernst du zu lesen. Du kannst es wieder neu lernen.
+F0263;Lieber du machst OnlyFans, kannst dich aber anonymisieren oder deine Partnerin macht Escort, aber ohne Sex und intim, nur so Abend-Begleitung. Für 5 Jahre.
+F0264;Lieber du immer ein Hinkebein oder ein gelähmter Arm
+F0265;Würdest du lieber auf alle Gegenstände verzichten die mehr als 500g oder auf alle die über 500g wiegen?
+F0266;Du musst gegen einen Hund kämpfen entweder nur du darfst beißen oder nur der Hund darf beißen.
+F0267;Würdest du lieber gegen 100 Pferde kämpfen, die alle so groß sind wie ein Huhn oder gegen 1 Huhn das so groß ist wie ein Pferd?
+F0268;Würdet du dich 2 Jahre lang für in einen Rollstuhl setzen und dich von Personen pflegen lassen für 10.000€ am Tag.
+F0269;Lieber ein Ohr sitzt 5cm tiefer oder du hast aufgespritzte Lippen
+F0270;Du darfst für 10 Minuten ins Jahr 2100 und dürft eine Sache googeln.
+F0271;Du reist zu deinem 18 Jährigem ich und darfst 3 Wörter sagen.
+F0272;Würdest du für 10 Mio.  Dein ganzes Gesicht tätowieren lassen. Aber ein 12 Jähriger sucht die Motive aus.
+F0273;Würdest du alle deine jetzigen Freundschaften für 10 Mio. aufgeben?
+F0274;Würdest du lieber 1 mal im Jahr einen Orang Utan bekämpfen, mit einem Schwert oder jedes mal wenn du ins Auto steigst greift dich ein Huhn an und jedes fünfte mal ein Hahn.
+F0275;Angenommen, du bist glücklich verheiratet und du bekommst 100.000€ dafür darfst du in deinem Leben sicher niemals mehr Sex mit einer anderen Frau haben.
+F0276;Du bekommst 3 Mio. € aber jedes mal wenn du deinen Namen Hörst musst 10 Sekunden in absoluter Zeitlupe reagieren.
+F0277;Würdest du lieber 1 Jahr lang in einem Raum leben der nach stinkendem Käse riecht oder jeden Morgen wirst du mit kaltem Wasser geweckt.
+F0278;Würdest du für 3 Mio. € 1 Jahr lang bei Mc Donalds arbeiten, leben, schlafen, nur 1 mal die Woche duschen und isst nur Nuggets.
+F0279;Würdest du für 160.000€ 1 Jahr lang die gleiche Unterhose tragen. Darfst die nicht wechseln, waschen, mit der duschen.
+F0280;Du kannst eine Person auf der Welt aussuchen gegen die du kämpfst, wenn du gewinnst gewinnst du all ihr Geld.
+F0281;Du bekommst 50 Mio.  Aber du darfst kein Land mehr betreten.
+F0282;Nie wieder warm duschen oder nie wieder kalt trinken
+F0283;Du bekommst 7 Mio.€ aber musst 1 Schachtel Zigaretten am Tag rauchen
+F0284;Hättest du lieber 10 Hunde oder 20 Katzen
+F0285;Du bekommst 358.000€, aber musst jedes mal im Aufzug die Tasten mit der Zunge betätigen.
+F0286;Du bekommst 1 Mio. € aber musst jeden Abend um 20:15 im Bett liegen und schlafen/bzw. ab dann im Bett nichts mehr machen. Du hast 6 Freilose im Jahr
+F0287;Du wiegst 70 kg mehr, du musst diese 70kg in einem Jahr wieder abnehmen. Schaffst du es bekommst 1 Mio. € wenn nicht schuldest du einem verbrecherischem Clan 500.000€
+F0288;Wenn du die Fähigkeit hättest kranke Menschen zu heilen, doch jedes mal wenn du das machst verkürzt sich dein Leben um 1 Jahr
+F0289;Würdest du lieber für den Rest deines Lebens eine Warnweste tragen oder einen Helm tragen
+F0290;Stell dir vor deine Eltern leben im selben Haus wie du. Sie haben jeden Tag Sex, entweder du hörst es jedes mal oder du schaust 1 mal für 10 Minuten zu.
+F0291;Nie wieder süß oder nie wieder herzhaft essen
+F0292;Würdest du lieber in einer gerechten Gesellschaft leben in der du 1.500€ im Monat verdienst oder in einer ungerechten mit 15.000€ im Monat ?
+F0293;Du bist in der Kennenlernphase, die Person schreibt dir 1 Woche nicht. Schreibst du nochmal oder nicht ?
+F0294;"Würdest du für 10 Mio. € aber jedes mal wenn du eine Person im Rollstuhl siehst musst du fragen ""Na heute kein Bock zu gehen?"""
+F0295;Du bekommst 2 Mio. € aber dafür musst du dich jedes Jahr 1 mal in Kacke duschen
+F0296;Du bekommst 250.000€ aber musst 1 Jahr lang heimlich Fotos von dem Füßen deiner Frau machen und damit einen Insta Account aufbauen. Wenn du es schaffst in einem Jahr 15.000 Follower zu generieren, bekommst du erneut 250.000€
+F0297;Du bekommst 5.000€ aber musst dafür einmal das ganze Handband eines Laufbands ablecken.
+F0298;Entweder du rettest 1 Menschen oder 1000 Hunde
+F0299;Würdest du 1 Person töten, mit allen Folgen und dafür beendest du den Welthunger
+F0300;Du kannst nur noch pinkeln, wenn dir jemand zusieht oder nur noch auf öffentlichen Toiletten kacken?
+F0301;Du kannst jede Sprache fließend und akzentfrei sprechen aber verlernst dafür alle die du jetzt kannst
+F0302;Du kannst jedes Fahrzeug  (Schiff, Auto, Flugzeug) fahren, aber ab da an bekommst du jeden Monat deine Tage
+F0303;Würdest du für 5 Mio. € dein Leben lang nicht mehr dein eigenes Spiegelbild sehen?
+F0304;Würdest du lieber gegen 10 Hunde kämpfen oder gegen 50 Katzen?
+F0305;Würdest du lieber beide kleinen Zehen amputieren lassen oder ein Auge für immer schielen lassen
+F0306;Entweder eine Hand ist doppelt so groß oder ein Fuß?
+F0307;Würdest du für 3 Mio. € 1 Jahr jeden Tag 8 Stunden lang ununterbrochen auf Insta scrollen?
+F0308;Würdest du lieber den Rest deines Lebens ohne das Internet auskommen  oder du darfst es weiter benutzen, aber am dann werden alle Chats, Bilder und Suchverläufe werden veröffentlicht. (auch aus der Vergangenheit)
+F0309;Entweder jeder auf der ganzen Welt denkt, dass du pädophil bist, aber du bist es nicht oder du bist es, aber keiner wird davon erfahren. Du lebst es aber nicht aus.
+F0310;Du kannst dir dein Traumhaus an dem Traumort deiner Wahl aussuchen, aber eine deiner Exfreundinnen lebt auch in dem Haus.
+F0311;Lieber doppelt so große Hände oder halb so große Füße?
+F0312;Du bekommst 2 Mio. €, wenn du 2 Jahre lang, jemandes mal wenn du jemanden mit Kinderwagen siehst, ihn fragen, ob das Kind schon irgendwelche Tricks kann und so lange an dem Griff des Kinderwagens schütteln, bis das Kind entweder aufwacht, schreit, weint oder lacht und du darfst die Situation danach nicht auflösen.
+F0313;Würdest du eher ein Heilmittel gegen Krebs erfinden, was aber nur super super reiche sich leisten können oder einfach keins und alle leiden gleich?
+F0314;Würdest du eher ein Frau heiraten, die OnlyFans Model ist (komplett nackt), auch bekannt dafür ist, aber sie bleibt dir körperlich treu oder du heiratest eine Frau, sie geht dir aber mehrfach im laufe eurer Ehe fremd, du weißt es aber nicht.
+F0315;Du bekommst monatlich 1.700€ musst aber jedes mal wenn du aus dem Haus gehst roten Lippenstift aufsetzen.
+F0316;Du bekommst 100.000€ oder eine 50:50 Chance auf 1 Mio. 
+F0317;Du hast eine magische Geldbörse, immer wenn du 100€ ausgibst hast du neue 100€. Aber du darfst sonst kein Geld besitzen. Also kannst du nichts für über 100€ kaufen
+F0318;Würdest du für 100.000€ in ein Tigergehege springen, einen Tiger einen Klaps geben und wegrennen. Der Tiger hört nicht wenn du kommst
+F0319;Für wie viel Geld würdest du akzeptieren, dass jede Person, über die du jemals sprichst, immer genau weiß, was du gesagt hast?  Egal ob Positiv oder Negativ. Plus alle Dinge die du in der Vergangenheit über diese Person gemacht hast
+F0320;Du bekommst 10 Mio. € aber dafür ist jeden Tag eine Regenwolke über dir. Die Wolke lässt dich 8 Stunden am Tag in Ruhe
+F0321;Deine Nase läuft Tag und Nacht. Du bekommst im ersten Monat 1000€, im zweiten 2000€ usw. Du musst vorher angeben wie lange du es machst. Wie lange würdest du es machen?
+F0322;Du bekommst 1 Mio. € aber darfst ab dann für 10 Jahre nur auf ein Dixiklo gehen
+F0323;Du bekommst 5 Mio. € aber bist von da an stark Drogenabhängig (Opium, Morphium, Schmerztabletten). Du darfst dann zur Reha und co.
+F0324;Lieber selber nie wieder einen Orgasmus haben oder nie wieder eine andere Person zum Orgasmus bringen können?
+F0325;Würdest du deine Freundin 1 Nacht alleine im Wald stehen lassen für 1 Mio. €. Du gehst mit ihr tief in einen Wald rein und rennst dann weg. Du darfst die Situation nie auflösen
+F0326;Deine Frau wurde gekidnappt und wird 30 Minuten Autofahrt von dir entfernt gefangen gehalten. Du fährst dorthin, um sie zu retten. Es ist eine warme Nacht und deine Fester sind unten. Wirst du auf der Fahrt Musik hören ?
